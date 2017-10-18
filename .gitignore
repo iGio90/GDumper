@@ -1,1 +1,5 @@
 .idea
+dumps/
+libg.so
+fuzzer.py
+dumper.js
