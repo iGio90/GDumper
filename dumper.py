@@ -1,4 +1,5 @@
 import frida
+import socket
 import sys
 import time
 import os
@@ -10,7 +11,8 @@ psk = ""
 def parse_message(message, data):
     payload = message["payload"]
     arr = payload.split(":")
-    sess_file.write(payload + "\n")
+    #sess_file.write(payload + "\n")
+    clientsocket.send(payload)
     if arr[0] == "0":
         print("PK:"+arr[1])
     elif arr[0] == "1":
@@ -41,7 +43,10 @@ if game == 0:
 if not os.path.exists("dumps"):
     os.makedirs("dumps")
 
-sess_file = open("dumps/" + str(time.time()) + ".bin", "w")
+#sess_file = open("dumps/" + str(time.time()) + ".bin", "w")
+
+clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clientsocket.connect(('localhost', 8089))
 
 runCmd("adb shell am force-stop " + package_name)
 runCmd("adb shell am start -n " + package_name + "/" + package_name + ".GameApp")
@@ -51,4 +56,4 @@ script = process.create_script(instrument_debugger_checks())
 script.on('message', parse_message)
 script.load()
 sys.stdin.read()
-sess_file.close()
+#sess_file.close()
