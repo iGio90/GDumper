@@ -1,0 +1,30 @@
+{
+  "name": "GDumper",
+  "version": "1.0.0",
+  "description": "GDumper",
+  "homepage": "https://github.com/iGio90/GDumper",
+  "bugs": {
+    "url": "https://github.com/iGio90/GDumper/issues"
+  },
+  "main": "proxy.js",
+  "author": "Giovanni Rocca",
+  "license": "GNU GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iGio90/GDumper.git"
+  },
+  "engines": {
+    "node": ">=6.8.0"
+  },
+  "dependencies": {
+    "blake2": "^1.4.0",
+    "bytebuffer": "^5.0.1",
+    "console-stamp": "^0.2.5",
+    "bb-messages": "SC-DevTeam/bb-messages",
+    "cr-messages": "SC-DevTeam/cr-messages",
+    "coc-messages": "SC-DevTeam/coc-messages",
+    "jsome": "^2.3.26",
+    "long": "^3.2.0",
+    "tweetnacl": "^0.14.5"
+  }
+}

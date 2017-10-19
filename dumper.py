@@ -46,7 +46,7 @@ if not os.path.exists("dumps"):
 #sess_file = open("dumps/" + str(time.time()) + ".bin", "w")
 
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientsocket.connect(('localhost', 8089))
+clientsocket.connect(('localhost', 10101))
 
 runCmd("adb shell am force-stop " + package_name)
 runCmd("adb shell am start -n " + package_name + "/" + package_name + ".GameApp")
