@@ -17,12 +17,12 @@
     "node": ">=6.8.0"
   },
   "dependencies": {
+    "bb-messages": "SC-DevTeam/bb-messages",
     "blake2": "^1.4.0",
     "bytebuffer": "^5.0.1",
-    "console-stamp": "^0.2.5",
-    "bb-messages": "SC-DevTeam/bb-messages",
-    "cr-messages": "SC-DevTeam/cr-messages",
     "coc-messages": "SC-DevTeam/coc-messages",
+    "console-stamp": "^0.2.5",
+    "cr-messages": "github:SC-DevTeam/cr-messages",
     "jsome": "^2.3.26",
     "long": "^3.2.0",
     "tweetnacl": "^0.14.5"

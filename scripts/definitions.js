@@ -26,8 +26,7 @@ class Definitions {
             fs.readdir('./node_modules/' + path + '/' + folder, (err, files) => {
                 console.time('Loaded ' + folder + ' definitions in');
                 if (err) {
-                    console.log('error opening node-modules/' + path + '/' + folder + ': ' + err);
-                    process.exit(1);
+                    return;
                 }
 
                 files.forEach(file => {
