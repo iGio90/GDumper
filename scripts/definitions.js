@@ -8,25 +8,32 @@ const ByteBuffer = require("./bytebuffer-sc");
 const EMsg = require('./emsg');
 
 class Definitions {
-
-    constructor() {
+    constructor(game) {
         let self = this;
 
         self.definitions = [];
         self.components = [];
 
         ['client', 'server', 'component'].forEach(function(folder) {
-            fs.readdir('./node_modules/cr-messages/' + folder, (err, files) => {
+            let path = "";
+            if (game === 0) {
+                path = "bb-messages";
+            } else if (game === 1) {
+                path = "cr-messages";
+            } else {
+                path = "coc-messages"
+            }
+            fs.readdir('./node_modules/' + path + '/' + folder, (err, files) => {
                 console.time('Loaded ' + folder + ' definitions in');
                 if (err) {
-                    console.log('error opening node-modules/cr-messages/' + folder + ': ' + err);
+                    console.log('error opening node-modules/' + path + '/' + folder + ': ' + err);
                     process.exit(1);
                 }
 
                 files.forEach(file => {
                     console.log('loading ' + folder +'/' + file +'...');
 
-                    let json = JSON.parse(fs.readFileSync('./node_modules/cr-messages/' + folder + '/' + file, 'utf8'));
+                    let json = JSON.parse(fs.readFileSync('./node_modules/' + path + '/' + folder + '/' + file, 'utf8'));
 
                     if (json.id) {
                         self.definitions[json.id] = json;

@@ -9,7 +9,7 @@ const PacketReceiver = require('./scripts/packetreceiver');
 const Definitions = require('./scripts/definitions');
 const EMsg = require('./scripts/emsg');
 
-const definitions = new Definitions();
+const definitions = new Definitions(0); // change 1 to go for cr or 2 for coc
 const clients = {};
 
 const server = net.createServer();
