@@ -1,10 +1,10 @@
 'use strict';
+require('console-stamp')(console, 'yyyy-mm-dd HH:MM:ss');
 
 const net = require('net');
 const jsome = require('jsome');
 
-require('console-stamp')(console, 'yyyy-mm-dd HH:MM:ss');
-
+const Crypto = require('./scripts/crypto');
 const PacketReceiver = require('./scripts/packetreceiver');
 const Definitions = require('./scripts/definitions');
 const EMsg = require('./scripts/emsg');
@@ -68,7 +68,6 @@ server.on('connection', function(socket) {
                     ' [' + message.messageType + ']' : message.messageType));
 
             crypto.decrypt(message, isOutgoing);
-
             definitions.decode(message);
 
             if (message.decoded && Object.keys(message.decoded).length) {

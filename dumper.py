@@ -12,7 +12,7 @@ def parse_message(message, data):
     payload = message["payload"]
     arr = payload.split(":")
     #sess_file.write(payload + "\n")
-    clientsocket.send(payload)
+    clientsocket.send(payload.encode())
     if arr[0] == "0":
         print("PK:"+arr[1])
     elif arr[0] == "1":

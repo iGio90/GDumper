@@ -49,11 +49,10 @@ class Crypto {
     decrypt(message, out) {
         if (message.messageType === EMsg.Login) {
             let cipherText = message.payload.slice(32);
-            let sharedKey = new Buffer(nacl.box.before(this.privateKey, this.publicServerKey));
             let nonce = new Nonce({ clientKey: this.publicKey, serverKey: this.publicServerKey });
+            let sharedKey = new Buffer(nacl.box.before(this.publicServerKey, this.privateKey));
 
             message.decrypted = nacl.box.open.after(cipherText, nonce.getBuffer(), sharedKey);
-
             if (message.decrypted) {
                 this.setDecryptOutNonce(Buffer.from(message.decrypted.slice(24, 48)));
                 message.decrypted = message.decrypted.slice(48);
