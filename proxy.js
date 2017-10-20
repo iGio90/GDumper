@@ -68,10 +68,12 @@ server.on('connection', function(socket) {
                     ' [' + message.messageType + ']' : message.messageType));
 
             crypto.decrypt(message, isOutgoing);
-            definitions.decode(message);
+            if (message.decrypted.length > 0) {
+                definitions.decode(message);
 
-            if (message.decoded && Object.keys(message.decoded).length) {
-                jsome(message.decoded);
+                if (message.decoded && Object.keys(message.decoded).length) {
+                    jsome(message.decoded);
+                }
             }
         });
     });

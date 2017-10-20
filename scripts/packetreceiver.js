@@ -7,7 +7,7 @@ class PacketReceiver {
     }
 
     packetize(data, callback) {
-        let messageId, offset, payloadLength, ref, ref1, results;
+        var messageId, offset, payloadLength, ref, ref1, results;
 
         if (this._buffer) {
             this._buffer = Buffer.concat([this._buffer, data]);

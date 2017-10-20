@@ -60,8 +60,8 @@ class Crypto {
         } else if (message.messageType === EMsg.LoginOk) {
             let nonce = new Nonce({ clientKey: this.publicKey, serverKey: this.publicServerKey, nonce: this.decryptOutNonce });
 
-            let sharedKey = new Buffer(nacl.box.before(this.privateKey, this.publicServerKey));
-            message.decrypted = nacl.box.open.after(message.payload, nonce, sharedKey);
+            let sharedKey = new Buffer(nacl.box.before(this.publicServerKey, this.privateKey));
+            message.decrypted = nacl.box.open.after(message.payload, nonce.getBuffer(), sharedKey);
 
             if (message.decrypted) {
                 this.setDecryptInNonce(Buffer.from(message.decrypted.slice(0, 24)));
@@ -71,10 +71,10 @@ class Crypto {
         } else {
             if (out) {
                 this.decryptOutNonce.increment();
-                message.decrypted = nacl.box.open.after(message.payload, this.decryptOutNonce, this.sharedKey);
+                message.decrypted = nacl.box.open.after(message.payload, this.decryptOutNonce.getBuffer(), this.sharedKey);
             } else {
                 this.decryptInNonce.increment();
-                message.decrypted = nacl.box.open.after(message.payload, this.decryptInNonce, this.sharedKey);
+                message.decrypted = nacl.box.open.after(message.payload, this.decryptInNonce.getBuffer(), this.sharedKey);
             }
         }
     }
