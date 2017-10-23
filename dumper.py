@@ -47,12 +47,12 @@ def parse_message(message, data):
             sess_file.write(arr[1])
         elif arr[0] == "3":
             msgId = int(arr[1][:4], 16)
-            sess_file = open(path + "/client_" + str(time.time()) + "_" + msgId + ".bin", "w")
+            sess_file = open(path + "/client_" + str(msgId) + str(time.time()) + ".bin", "w")
             sess_file.write(arr[1])
             print("[CLIENT] " + str(msgId))
         elif arr[0] == "4":
             msgId = int(arr[1][:4], 16)
-            sess_file = open(path + "/client_" + str(time.time()) + "_" + msgId + ".bin", "w")
+            sess_file = open(path + "/server_" + str(msgId) + str(time.time()) + ".bin", "w")
             sess_file.write(arr[1])
             print("[SERVER] " + str(msgId))
         if (sess_file is not None):
