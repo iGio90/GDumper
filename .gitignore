@@ -2,7 +2,8 @@
 dumps/
 libg.so
 fuzzer.py
-dumper.js
+bb_dumper.js
+coc_dumper.js
 node_modules/.bin/
 node_modules/ansi-regex/
 node_modules/ansi-styles/
@@ -92,3 +93,7 @@ node_modules/y18n/
 node_modules/yargs-parser/
 node_modules/yargs/
 package-lock.json
+log
+Would skip repository node_modules/bb-messages/
+test.js
+xpx.js

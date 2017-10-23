@@ -4,11 +4,18 @@ import sys
 import time
 import os
 
-pk = ""
-sk = ""
-psk = ""
+game = 0
+if len(sys.argv) > 1:
+    game = sys.argv[1]
+
+package_name = ""
+if game == 0:
+    package_name = "com.supercell.boombeach"
+elif game == 1:
+    package_name = "com.supercell.clashofclans"
 
 def parse_message(message, data):
+    print(message)
     payload = message["payload"]
     arr = payload.split(":")
     #sess_file.write(payload + "\n")
@@ -27,18 +34,16 @@ def parse_message(message, data):
         print("[SERVER] " + str(msgId))
 
 def instrument_debugger_checks():
-    return open("dumper.js", "r").read()
+    injector = ""
+    if game == 0:
+        injector = "bb_dumper.js"
+    elif game == 1:
+        injector = "coc_dumper.js"
+
+    return open(injector, "r").read()
 
 def runCmd(cmd):
     os.system(cmd)
-
-game = 0
-if len(sys.argv) > 1:
-    game = sys.argv[1]
-
-package_name = ""
-if game == 0:
-    package_name = "com.supercell.boombeach"
 
 if not os.path.exists("dumps"):
     os.makedirs("dumps")
