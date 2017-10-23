@@ -47,12 +47,12 @@ def parse_message(message, data):
             sess_file.write(arr[1])
         elif arr[0] == "3":
             msgId = int(arr[1][:4], 16)
-            sess_file = open(path + "/client_" + str(msgId) + str(time.time()) + ".bin", "w")
+            sess_file = open(path + "/" + str(int(round(time.time() * 1000))) + "_client_" + str(msgId) + ".bin", "w")
             sess_file.write(arr[1])
             print("[CLIENT] " + str(msgId))
         elif arr[0] == "4":
             msgId = int(arr[1][:4], 16)
-            sess_file = open(path + "/server_" + str(msgId) + str(time.time()) + ".bin", "w")
+            sess_file = open(path + "/" + str(int(round(time.time() * 1000))) + "_server_" + str(msgId) + ".bin", "w")
             sess_file.write(arr[1])
             print("[SERVER] " + str(msgId))
         if (sess_file is not None):
@@ -99,7 +99,7 @@ if mode == "0":
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect(('localhost', 10101))
 elif mode == "1":
-    t = str(time.time())
+    t = str(int(round(time.time() * 1000)))
     path = "dumps/" + package_name + "_" + t
     os.makedirs(path)
 

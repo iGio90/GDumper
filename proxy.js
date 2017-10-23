@@ -24,8 +24,6 @@ const crypto = new Crypto();
 let OTG = false;
 
 function packetize(data, isOutgoing) {
-    console.log("GET: " + isOutgoing + " " + data.toString("hex").substring(0, 14));
-    console.log(data.length);
     if (isOutgoing !== null) {
         OTG = isOutgoing;
     }
