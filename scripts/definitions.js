@@ -19,9 +19,9 @@ class Definitions {
             if (game === 0) {
                 path = "bb-messages";
             } else if (game === 1) {
-                path = "cr-messages";
+                path = "coc-messages";
             } else {
-                path = "coc-messages"
+                path = "cr-messages"
             }
             fs.readdir('./node_modules/' + path + '/' + folder, (err, files) => {
                 console.time('Loaded ' + folder + ' definitions in');

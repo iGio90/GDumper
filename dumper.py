@@ -9,17 +9,23 @@ if len(sys.argv) > 1:
     game = sys.argv[1]
 
 package_name = ""
-if game == 0:
+if game == "0":
     package_name = "com.supercell.boombeach"
-elif game == 1:
+elif game == "1":
     package_name = "com.supercell.clashofclans"
 
 def parse_message(message, data):
-    print(message)
     payload = message["payload"]
-    arr = payload.split(":")
+    arr = payload.split("::::")
     #sess_file.write(payload + "\n")
-    clientsocket.send(payload.encode())
+
+    msglen = len(payload)
+    totalsent = 0
+    while totalsent < msglen:
+        sent = clientsocket.send(payload[totalsent:].encode())
+        if sent == 0:
+            raise RuntimeError("socket connection broken")
+        totalsent = totalsent + sent
     if arr[0] == "0":
         print("PK:"+arr[1])
     elif arr[0] == "1":
@@ -31,13 +37,16 @@ def parse_message(message, data):
         print("[CLIENT] " + str(msgId))
     elif arr[0] == "4":
         msgId = int(arr[1][:4], 16)
-        print("[SERVER] " + str(msgId))
+        print("[SERVER] " + str(msgId) + " " + str(totalsent))
+
+    time.sleep(50.0 / 1000.0)
+
 
 def instrument_debugger_checks():
     injector = ""
-    if game == 0:
+    if game == "0":
         injector = "bb_dumper.js"
-    elif game == 1:
+    elif game == "1":
         injector = "coc_dumper.js"
 
     return open(injector, "r").read()
