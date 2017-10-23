@@ -1,4 +1,3 @@
-Reverse engineering BoomBeach. Obfuscations and #gdbout vs frida.
+A set of utilities to dump, decrypt and parse Supercell games protocol. Big thanks to Royale-Proxy for the bytebuffer extension and working base.
 
-I will keep dumper and fuzzer private... feel free to come here and ask for it:
-https://discord.gg/hTVhy3V
+Dumpers, fuzzers and extra tools are gitignored just because i want to make sure whose gonna put hands on them. Feel free to come here https://discord.gg/hTVhy3V and get a copy
