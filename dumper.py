@@ -20,6 +20,8 @@ game = sys.argv[1]
 mode = sys.argv[2]
 
 package_name = ""
+path = ""
+
 if game == "0":
     package_name = "com.supercell.boombeach"
 elif game == "1":
@@ -28,9 +30,33 @@ elif game == "1":
 def parse_message(message, data):
     payload = message["payload"]
     arr = payload.split("::::")
+    sess_file = None
 
     if mode == "1":
-        sess_file.write(payload + "\n")
+        if arr[0] == "0":
+            print("PK:"+arr[1])
+            sess_file = open(path + "/pk" + ".bin", "w")
+            sess_file.write(arr[1])
+        elif arr[0] == "1":
+            print("SK:"+arr[1])
+            sess_file = open(path + "/sk" + ".bin", "w")
+            sess_file.write(arr[1])
+        elif arr[0] == "2":
+            print("PKS:"+arr[1])
+            sess_file = open(path + "/pks" + ".bin", "w")
+            sess_file.write(arr[1])
+        elif arr[0] == "3":
+            msgId = int(arr[1][:4], 16)
+            sess_file = open(path + "/client_" + str(time.time()) + "_" + msgId + ".bin", "w")
+            sess_file.write(arr[1])
+            print("[CLIENT] " + str(msgId))
+        elif arr[0] == "4":
+            msgId = int(arr[1][:4], 16)
+            sess_file = open(path + "/client_" + str(time.time()) + "_" + msgId + ".bin", "w")
+            sess_file.write(arr[1])
+            print("[SERVER] " + str(msgId))
+        if (sess_file is not None):
+            sess_file.close()
     elif mode == "0":
         msglen = len(payload)
         totalsent = 0
@@ -69,11 +95,13 @@ def runCmd(cmd):
 if not os.path.exists("dumps"):
     os.makedirs("dumps")
 
-sess_file = open("dumps/" + str(time.time()) + ".bin", "w")
-
 if mode == "0":
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect(('localhost', 10101))
+elif mode == "1":
+    t = str(time.time())
+    path = "dumps/" + package_name + "_" + t
+    os.makedirs(path)
 
 runCmd("adb shell am force-stop " + package_name)
 runCmd("adb shell am start -n " + package_name + "/" + package_name + ".GameApp")
@@ -83,5 +111,3 @@ script = process.create_script(instrument_debugger_checks())
 script.on('message', parse_message)
 script.load()
 sys.stdin.read()
-if mode == "1":
-    sess_file.close()
