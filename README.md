@@ -12,7 +12,6 @@ Dumpers, fuzzers and extra tools are gitignored just because i want to make sure
 * Start another one and ``python3 dumper.py 0`` (0: bb / 1: coc)
 
 #### TODO
-* Fix proxy.js to packetize data from dumper
 * Replace manual edit of game type in proxy.js.
 
 ```javascript
