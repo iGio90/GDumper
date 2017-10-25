@@ -4,36 +4,14 @@ import socket
 import sys
 import time
 import os
-
-if len(sys.argv) < 3:
-    print("Usage: python3 dumper.py mode game")
-    print("")
-    print("Modes:")
-    print("0: Connect to local node proxy server")
-    print("1: Dump session")
-    print("")
-    print("Games:")
-    print("0: Boom Beach")
-    print("1: Clash of Clans")
-    exit(0)
-
-mode = sys.argv[1]
-game = sys.argv[2]
-
-package_name = ""
-path = ""
-
-if game == "0":
-    package_name = "com.supercell.boombeach"
-elif game == "1":
-    package_name = "com.supercell.clashofclans"
+import argparse
 
 def parse_message(message, data):
     payload = message["payload"]
     arr = payload.split("::::")
     sess_file = None
 
-    if mode == "1":
+    if mode == "dump":
         if arr[0] == "0":
             print("PK:"+arr[1])
             sess_file = open(path + "/pk" + ".bin", "w")
@@ -58,7 +36,7 @@ def parse_message(message, data):
             print("[SERVER] " + str(msgId))
         if (sess_file is not None):
             sess_file.close()
-    elif mode == "0":
+    elif mode == "proxy":
         msglen = len(payload)
         totalsent = 0
         while totalsent < msglen:
@@ -86,11 +64,25 @@ def get_table():
 
 def instrument_debugger_checks():
     injector = open("dumper.js", "r").read()
-    cputype = "1" #TODO: replace this with optional switch arm/x86
-    xptable = get_table()[game][cputype]
-    xp1 = int(xptable["1"])
-    xp2 = int(xptable["2"])
-    xp3 = int(xptable["3"])
+    
+    cputype = ""
+    
+    if(arch == "arm"):
+        cputype = "1"
+    else:
+        cputype = "0"
+        
+    gametype = ""
+    
+    if(game == "bb"):
+        gametype = "0"
+    else:
+        gametype = "1"
+    
+    xptable = get_table()[gametype][cputype]
+    xp1 = int(xptable["1"], 16)
+    xp2 = int(xptable["2"], 16)
+    xp3 = int(xptable["3"], 16)
     thumb = xptable["thumb"]
     if (thumb):
         xp1 = xp1 + 1
@@ -100,17 +92,62 @@ def instrument_debugger_checks():
 
 def runCmd(cmd):
     os.system(cmd)
+    
+mode = ""
+game = ""
+arch = ""
+
+package_name = ""
+path = ""
+
+help = 'dumper.py -m <mode> -g <game> -a <cpu_architecture>'
+    
+parser = argparse.ArgumentParser(description='Dump SC protocol data.')
+
+parser.add_argument('-m', '--mode', help="Mode for dumper to run.")
+parser.add_argument('-g', '--game', help="Game to run.")
+parser.add_argument('-a', '--arch', help="Device architecture.")
+    
+args = parser.parse_args()
+
+mode = args.mode
+game = args.game
+arch = args.arch
+
+if(mode != "proxy" and mode != "dump"):
+    print("Mode \"" + mode + "\" is not valid. Try \"proxy\" or \"dump\"")
+    print("Proxy: Connects to the local node proxy server.")
+    print("Dump: Starts a dump session.")
+    sys.exit(1)
+    
+if(game != "coc" and game != "bb"):
+    print("Game \"" + game + "\" is not valid. Try \"coc\" or \"bb\"")
+    print("COC: Clash of Clans")
+    print("BB: Boom Beach")
+    sys.exit(1)
+        
+if(arch != "arm" and arch != "x86"):
+    print("CPU Architecture \"" + arch + "\" is not valid. Try \"arm\" or \"x86\"")
+    print("ARM: Recommended for most physical devices.")
+    print("x86: Recommended for a few physical devices and most emulators.")
+    sys.exit(1)
+
+
+if game == "bb":
+    package_name = "com.supercell.boombeach"
+elif game == "coc":
+    package_name = "com.supercell.clashofclans"
 
 print("Starting dumper for " + package_name)
 	
 if not os.path.exists("dumps"):
     os.makedirs("dumps")
 
-if mode == "0":
+if mode == "proxy":
     print("Requesting connection to proxy.")
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect(('localhost', 10101))
-elif mode == "1":
+elif mode == "dump":
     print("Preparing file dumps.")
     t = str(int(round(time.time() * 1000)))
     path = "dumps/" + package_name + "_" + t
