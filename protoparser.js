@@ -47,8 +47,6 @@ function readDump(iter) {
     let dump = fs.readFileSync(filePath + path, 'utf8');
     dumpsIter++;
 
-    console.log(new Buffer(dump, "hex"));
-
     packetReceiver.packetize(new Buffer(dump, "hex"), function(packet) {
         let message = {
             'messageType': packet.readUInt16BE(0),

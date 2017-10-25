@@ -1,4 +1,5 @@
 import frida
+import json
 import socket
 import sys
 import time
@@ -79,15 +80,23 @@ def parse_message(message, data):
             print("[SERVER] " + str(msgId) + " " + str(totalsent))
         time.sleep(50.0 / 1000.0)
 
+def get_table():
+    with open('xptable.json') as data_file:
+        return json.load(data_file)
 
 def instrument_debugger_checks():
-    injector = ""
-    if game == "0":
-        injector = "bb_dumper.js"
-    elif game == "1":
-        injector = "coc_dumper.js"
-
-    return open(injector, "r").read()
+    injector = open("dumper.js", "r").read()
+    cputype = "1" #TODO: replace this with optional switch arm/x86
+    xptable = get_table()[game][cputype]
+    xp1 = int(xptable["1"])
+    xp2 = int(xptable["2"])
+    xp3 = int(xptable["3"])
+    thumb = xptable["thumb"]
+    if (thumb):
+        xp1 = xp1 + 1
+        xp2 = xp2 + 1
+        xp3 = xp3 + 1
+    return injector.replace("xxp1", str(xp1)).replace("xxp2", str(xp2)).replace("xxp3", str(xp3))
 
 def runCmd(cmd):
     os.system(cmd)
