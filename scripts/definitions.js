@@ -156,6 +156,11 @@ class Definitions {
             } else {
                 decoded = 0;
             }
+		} else if (fieldType == 'SCSV') {
+			let id = reader.readInt32();
+			let value = reader.readInt32();
+			
+			decoded = {id: id, value: value};
         } else if (fieldType === 'ZIP_STRING') {
             let len = reader.readInt32() - 4; // it's prefixed with a INT32 of the unzipped length
 
