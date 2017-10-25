@@ -15,7 +15,7 @@ const EMsg = require('./scripts/emsg');
  * 1: coc
  * 2: cr
  */
-const definitions = new Definitions(1);
+const definitions = new Definitions(0);
 const clients = {};
 const server = net.createServer();
 const packetReceiver = new PacketReceiver();
