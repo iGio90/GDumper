@@ -24,6 +24,8 @@ adb push /path/to/frida /system/xbin/frida
 
 adb shell
 
+su
+
 chmod a+x /system/xbin/frida
 
 frida &
