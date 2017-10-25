@@ -27,7 +27,10 @@ if game == "0":
 elif game == "1":
     package_name = "com.supercell.clashofclans"
 
+print("Dumping " + package_name)
+	
 def parse_message(message, data):
+    print("Parse message.")
     payload = message["payload"]
     arr = payload.split("::::")
     sess_file = None
@@ -92,22 +95,32 @@ def instrument_debugger_checks():
 def runCmd(cmd):
     os.system(cmd)
 
+print("Starting dumper.")
+	
 if not os.path.exists("dumps"):
     os.makedirs("dumps")
 
 if mode == "0":
+    print("Requesting connection to proxy.")
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     clientsocket.connect(('localhost', 10101))
 elif mode == "1":
+    print("Preparing file dumps.")
     t = str(int(round(time.time() * 1000)))
     path = "dumps/" + package_name + "_" + t
     os.makedirs(path)
 
+print ("Killing " + package_name)
 runCmd("adb shell am force-stop " + package_name)
+print ("Starting " + package_name)
 runCmd("adb shell am start -n " + package_name + "/" + package_name + ".GameApp")
 
 process = frida.get_usb_device().attach(package_name)
+print("Frida attached.")
 script = process.create_script(instrument_debugger_checks())
+print("Dumper loaded.")
 script.on('message', parse_message)
+print("parse_message registered within script object.")
 script.load()
+print("Script loaded")
 sys.stdin.read()
