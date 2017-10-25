@@ -16,8 +16,8 @@ if len(sys.argv) < 3:
     print("1: Clash of Clans")
     exit(0)
 
-game = sys.argv[1]
-mode = sys.argv[2]
+mode = sys.argv[1]
+game = sys.argv[2]
 
 package_name = ""
 path = ""
@@ -27,10 +27,7 @@ if game == "0":
 elif game == "1":
     package_name = "com.supercell.clashofclans"
 
-print("Dumping " + package_name)
-	
 def parse_message(message, data):
-    print("Parse message.")
     payload = message["payload"]
     arr = payload.split("::::")
     sess_file = None
@@ -95,7 +92,7 @@ def instrument_debugger_checks():
 def runCmd(cmd):
     os.system(cmd)
 
-print("Starting dumper.")
+print("Starting dumper for " + package_name)
 	
 if not os.path.exists("dumps"):
     os.makedirs("dumps")
@@ -122,5 +119,4 @@ print("Dumper loaded.")
 script.on('message', parse_message)
 print("parse_message registered within script object.")
 script.load()
-print("Script loaded")
 sys.stdin.read()
