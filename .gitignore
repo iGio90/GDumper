@@ -2,8 +2,8 @@
 dumps/
 libg.so
 fuzzer.py
-bb_dumper.js
-coc_dumper.js
+dumper.js
+xptable.json
 node_modules/
 package-lock.json
 log
