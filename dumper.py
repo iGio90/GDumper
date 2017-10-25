@@ -100,8 +100,6 @@ arch = ""
 package_name = ""
 path = ""
 
-help = 'dumper.py -m <mode> -g <game> -a <cpu_architecture>'
-    
 parser = argparse.ArgumentParser(description='Dump SC protocol data.')
 
 parser.add_argument('-m', '--mode', help="Mode for dumper to run.")
@@ -113,6 +111,10 @@ args = parser.parse_args()
 mode = args.mode
 game = args.game
 arch = args.arch
+
+if(not mode or not game or not arch):
+    print("Run with argument --help (-h) for more information.")
+    sys.exit(1)
 
 if(mode != "proxy" and mode != "dump"):
     print("Mode \"" + mode + "\" is not valid. Try \"proxy\" or \"dump\"")
