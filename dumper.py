@@ -76,7 +76,7 @@ def instrument_debugger_checks():
     
     if(game == "bb"):
         gametype = "0"
-    else:
+    elif(game == "coc"):
         gametype = "1"
     
     xptable = get_table()[gametype][cputype]
