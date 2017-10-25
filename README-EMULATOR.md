@@ -10,10 +10,10 @@ GDumper supports both ARM and x86 emulators.
 - Frida Server **10.6.12** (for ARM/x86)
 - Frida **10.6.12** (for Python3)
 
-## Why use Frida 10.6.12?
+#### Why use Frida 10.6.12?
 Because this is the only version that is least likely to crash at this point, and supports both ARM/x86 emulators.
 
-**STEPS**
+## Steps
 
 1. Install the Android SDK.
 
