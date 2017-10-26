@@ -6,7 +6,7 @@ GDumper supports both ARM and x86 emulators.
 
 **REQUIREMENTS**
 - Android SDK (you'll be needing ADB [Android Debug Bridge])
-- Android Emulator (either an AVD [Android Virtual Device] or any rooted x86 emulator)
+- Android Emulator **running Android 6.0** (either an AVD [Android Virtual Device] or any rooted x86 emulator)
 - Frida Server **10.6.12** (for ARM/x86)
 - Frida **10.6.12** (for Python3)
 
