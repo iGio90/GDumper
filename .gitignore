@@ -10,4 +10,4 @@ log
 Would skip repository node_modules/bb-messages/
 test.js
 xpx.js
-.iml
+*.iml
