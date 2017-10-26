@@ -193,7 +193,9 @@ class Definitions {
 			let decompressedLen = reader.readInt32();
 			
             if(reader.remaining() >= compressedLen) {
-                decoded = zlib.unzipSync(reader.slice(reader.offset, reader.offset + compressedLen).toBuffer()).toString();
+                decoded =  {compressed: compressedLen,
+                            decompressed: decompressedLen,
+                            data: zlib.unzipSync(reader.slice(reader.offset, reader.offset + compressedLen).toBuffer()).toString()};
                 reader.offset = reader.offset + compressedLen;
             } else {
                 decoded = false;
