@@ -90,6 +90,16 @@ class Definitions {
                     return;
                 }
             }
+
+            // If the boolean before the type is false, use the left-hand side.
+            // If the boolean before the type is true, use the right-hand side.
+            if (fieldType.includes('||')) {
+                if (Boolean(reader.readByte())) {
+                    fieldType = fieldType.substring(fieldType.indexOf('||') + 2);
+                } else {
+                    fieldType = fieldType.substring(0, fieldType.indexOf('||'));
+                }
+            }
 			
             if (fieldType.includes('[')) {
                 let n = fieldType.substring(fieldType.indexOf('[') + 1, fieldType.indexOf(']'));
