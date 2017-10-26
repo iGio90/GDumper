@@ -75,7 +75,7 @@ class Definitions {
                     return;
                 }
             }
-
+			
             if (fieldType.includes('[')) {
                 let n = fieldType.substring(fieldType.indexOf('[') + 1, fieldType.indexOf(']'));
                 fieldType = fieldType.substring(0, fieldType.indexOf('['));
@@ -106,6 +106,8 @@ class Definitions {
     }
 
     decode_field(reader, fieldType, field) {
+		reader.BE(); //Always use Big Endian
+		
         let decoded;
 
         if (fieldType === 'BYTE') {
@@ -156,20 +158,28 @@ class Definitions {
             } else {
                 decoded = 0;
             }
-        } else if (fieldType == 'SCSV') {
+        } else if (fieldType === 'SCSV') {
             let id = reader.readInt32();
             let value = reader.readInt32();
 			
             decoded = {id: id, value: value};
+        } else if (fieldType === 'TIMESTAMP') {
+            let timestamp = reader.readInt32();
+
+            let d = new Date(0);
+            d.setUTCSeconds(timestamp);
+
+            decoded = {timestamp: timestamp, date: d.toDateString()};
         } else if (fieldType === 'ZIP_STRING') {
-            let len = reader.readInt32() - 4; // it's prefixed with a INT32 of the unzipped length
-
-            reader.LE(); // switch to little endian
-            reader.BE(); // switch back to big endian
-
-            if(reader.remaining() >= len) {
-                decoded = zlib.unzipSync(reader.slice(reader.offset, reader.offset + len).toBuffer()).toString();
-                reader.offset = reader.offset + len;
+			let compressedLen = reader.readInt32() - 4;
+			
+			reader.LE(); //Zlib uses Little Endian
+			
+			let decompressedLen = reader.readInt32();
+			
+            if(reader.remaining() >= compressedLen) {
+                decoded = zlib.unzipSync(reader.slice(reader.offset, reader.offset + compressedLen).toBuffer()).toString();
+                reader.offset = reader.offset + compressedLen;
             } else {
                 decoded = false;
                 console.log('Insufficient data to unzip field.');
@@ -191,6 +201,7 @@ class Definitions {
                     });
 
                     if (extensionDef) {
+                        decoded.name = extensionDef.name;
                         decoded.payload = this.decode_fields(reader, extensionDef.fields);
                     } else {
                         console.warn('Error: Extensions of field type ' + fieldType + ' with id ' + decoded.id + ' is missing. (' + field.name + ').');

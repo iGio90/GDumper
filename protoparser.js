@@ -29,7 +29,7 @@ if (!fs.existsSync(filePath)) {
  * 1: coc
  * 2: cr
  */
-const definitions = new Definitions(1);
+const definitions = new Definitions(0);
 const packetReceiver = new PacketReceiver();
 const crypto = new Crypto();
 
@@ -47,6 +47,8 @@ function readDump(iter) {
     let dump = fs.readFileSync(filePath + path, 'utf8');
     dumpsIter++;
 
+    console.log(new Buffer(dump, "hex"));
+
     packetReceiver.packetize(new Buffer(dump, "hex"), function(packet) {
         let message = {
             'messageType': packet.readUInt16BE(0),
@@ -56,7 +58,8 @@ function readDump(iter) {
         };
 
         let out = path.indexOf("_client_") > 0;
-        console.log((out ? '[CLIENT] ' : '[SERVER] ')
+        
+		console.log((out ? '[CLIENT] ' : '[SERVER] ')
             + (EMsg[message.messageType] ? EMsg[message.messageType] +
                 ' [' + message.messageType + ']' : message.messageType));
 
