@@ -24,12 +24,14 @@ const PacketReceiver = require('./scripts/packetreceiver');
 const Definitions = require('./scripts/definitions');
 const EMsg = require('./scripts/emsg');
 
-if (process.argv.length < 3) {
-    console.log("Usage: node protoparser.js dumpspath");
+if (process.argv.length < 4) {
+    console.log("Usage: node protoparser.js dumpspath game");
     process.exit(0);
 }
 
 let filePath = process.argv[2];
+
+let game = parseInt(process.argv[3]);
 
 if (!fs.existsSync(filePath)) {
     console.log("Path not found!");
@@ -42,7 +44,7 @@ if (!fs.existsSync(filePath)) {
  * 1: coc
  * 2: cr
  */
-const definitions = new Definitions(0);
+const definitions = new Definitions(game);
 const packetReceiver = new PacketReceiver();
 const crypto = new Crypto();
 
@@ -60,8 +62,6 @@ function readDump(iter) {
     let dump = fs.readFileSync(filePath + path, 'utf8');
     dumpsIter++;
 
-    console.log(new Buffer(dump, "hex"));
-
     packetReceiver.packetize(new Buffer(dump, "hex"), function(packet) {
         let message = {
             'messageType': packet.readUInt16BE(0),
@@ -72,7 +72,7 @@ function readDump(iter) {
 
         let out = path.indexOf("_client_") > 0;
         
-		console.log((out ? '[CLIENT] ' : '[SERVER] ')
+        console.log((out ? '[CLIENT] ' : '[SERVER] ')
             + (EMsg[message.messageType] ? EMsg[message.messageType] +
                 ' [' + message.messageType + ']' : message.messageType));
 
