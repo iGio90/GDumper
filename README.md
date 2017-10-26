@@ -6,13 +6,8 @@ Dumpers, fuzzers and extra tools are gitignored just because i want to make sure
 * Python3
 * Frida (http://frida.re) (running on Android and bindings ``pip3 install frida``)
 
-#### USAGE (Live proxying)
-* Start a terminal and ``node proxy.js``
-* Start another one and ``python3 dumper.py 0 game`` (where game = 0: bb / 1: coc)
-
-#### USAGE (Session dump)
-* Start a terminal and ``python3 dumper.py 1 game`` (where game = 0: bb / 1: coc)
-* Once finish to dump your session start a terminal and ``node protoparser.js dumps/DUMPSPATH``
+#### USAGE
+* ``python3 dumper.py`` to print help
 
 #### TODO
 * Replace manual edit of game type in proxy.js.
