@@ -2,11 +2,9 @@
 dumps/
 libg.so
 fuzzer.py
-dumper.js
-xptable.json
 node_modules/
 package-lock.json
 log
 Would skip repository node_modules/bb-messages/
-test.js
-xpx.js
+priv_dumper.py
+priv_dumper.js
