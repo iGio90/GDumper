@@ -5,6 +5,6 @@ fuzzer.py
 node_modules/
 package-lock.json
 log
-Would skip repository node_modules/bb-messages/
 priv_dumper.py
 priv_dumper.js
+xpx.js
