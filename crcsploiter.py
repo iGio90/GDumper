@@ -1,6 +1,7 @@
 import argparse
 import binascii
 import capstone
+import keystone
 import os
 import sys
 
@@ -10,6 +11,8 @@ def main(args):
 
     parser.add_argument('-o', '--offset', help="Offset", required=True)
     parser.add_argument('-c', '--count', help="Count")
+    parser.add_argument('-pH', '--payloadH', help="Attempt to find a valid spot for given payload in hex string format")
+    parser.add_argument('-pI', '--payloadI', help="Attempt to find a valid spot for given payload provided as instruction")
     parser.add_argument('-e', '--extract', help="Extract library")
 
     args = parser.parse_args()
@@ -17,6 +20,8 @@ def main(args):
     offset = args.offset
     count = args.count
     extract = args.extract
+    payloadH = args.payloadH
+    payloadI = args.payloadI
 
     if not count:
         count = 8
@@ -47,27 +52,51 @@ def main(args):
         print("0x%x:\t%s\t%s" % (address, mnemonic, op_str))
     print("")
 
+    calculateCrc(hex_str)
+
+    if payloadI:
+        print("ASSEMBLING INSTRUCTION: %s" % payloadI)
+        try:
+            payloadI = payloadI.encode()
+            ks = keystone.Ks(keystone.KS_ARCH_ARM, keystone.KS_MODE_THUMB)
+            encoding, count = ks.asm(payloadI)
+            payloadH = binascii.hexlify(bytearray(encoding)).decode("ascii")
+            print(payloadH + "\n")
+        except keystone.KsError as e:
+            print("ERROR: %s" % e)
+
+    if payloadH:
+        print("CALCULATING CRC FOR CUSTOM PAYLOAD:")
+        calculateCrc(payloadH)
+
+
+def runCmd(cmd):
+    os.system(cmd)
+
+
+def calculateCrc(payload):
     k = 0
     crc = 0
     block = ""
-    for i in range(len(hex_str)):
+    plen = len(payload)
+    for i in range(plen):
         if i % 2 != 0:
+            if (k != 4 and k > 0) and (i + 1 == plen):
+                print("CRC for block %s: %d" % (str.upper(block), crc))
             continue
 
-        if i + 2 <= len(hex_str):
-            block += hex_str[i:i + 2]
-            crc += parseInt(hex_str[i:i + 2])
+        if i + 2 <= len(payload):
+            block += payload[i:i + 2]
+            crc += parseInt(payload[i:i + 2])
 
         k = k + 1
+
         if k == 4:
             k = 0
             print("CRC for block %s: %d" % (str.upper(block), crc))
             crc = 0
             block = ""
-
-
-def runCmd(cmd):
-    os.system(cmd)
+    print("")
 
 
 def parseInt(str):
