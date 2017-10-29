@@ -11,13 +11,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
 import frida
 import json
+import os
 import socket
 import sys
 import time
-import os
-import argparse
 
 
 def parse_message(message, data):
