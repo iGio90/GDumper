@@ -19,8 +19,8 @@ const fs = require('fs');
 const zlib = require('zlib');
 
 const Long = require("long");
-const ByteBuffer = require("./bytebuffer-sc");
-const EMsg = require('./emsg');
+const ByteBuffer = require("./scripts/bytebuffer-sc");
+const EMsg = require('./scripts/emsg');
 
 class Definitions {
     constructor(game) {

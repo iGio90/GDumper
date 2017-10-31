@@ -21,7 +21,7 @@ const jsome = require('jsome');
 
 const Crypto = require('./scripts/crypto');
 const PacketReceiver = require('./scripts/packetreceiver');
-const Definitions = require('./scripts/definitions');
+const Definitions = require('./definitions');
 const EMsg = require('./scripts/emsg');
 
 /**

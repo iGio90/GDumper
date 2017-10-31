@@ -12,7 +12,7 @@ def main(args):
     parser.add_argument('-o', '--offset', help="Offset", required=True)
     parser.add_argument('-c', '--count', help="Count")
     parser.add_argument('-pH', '--payloadH', help="Attempt to find a valid spot for given payload in hex string format")
-    parser.add_argument('-pI', '--payloadI', help="Attempt to find a valid spot for given payload provided as instruction")
+    parser.add_argument('-pI', '--payloadI', help="Attempt to find a valid spot for given instruction")
     parser.add_argument('-e', '--extract', help="Extract library")
 
     args = parser.parse_args()
@@ -40,7 +40,7 @@ def main(args):
     data = lib.read()
     lib.close()
 
-    target = data[offset:offset + count]
+    target = data[offset:offset + int(count)]
 
     hex_bytes = binascii.hexlify(target)
     hex_str = hex_bytes.decode("ascii")
@@ -66,7 +66,7 @@ def main(args):
             print("ERROR: %s" % e)
 
     if payloadH:
-        print("CALCULATING CRC FOR CUSTOM PAYLOAD:")
+        print("CALCULATING CRC FOR %s:" % str.upper(payloadH))
         calculateCrc(payloadH)
 
 

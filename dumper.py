@@ -52,12 +52,12 @@ def parse_message(message, data):
             sess_file.close()
     elif mode == "proxy":
         msglen = len(payload)
-        totalsent = 0
-        while totalsent < msglen:
-            sent = clientsocket.send(payload[totalsent:].encode())
+        totalSent = 0
+        while totalSent < msglen:
+            sent = clientsocket.send(payload[totalSent:].encode())
             if sent == 0:
                 raise RuntimeError("socket connection broken")
-            totalsent = totalsent + sent
+            totalSent = totalSent + sent
         if arr[0] == "0":
             print("PK:" + arr[1])
         elif arr[0] == "1":
@@ -69,7 +69,7 @@ def parse_message(message, data):
             print("[CLIENT] " + str(msgId))
         elif arr[0] == "4":
             msgId = int(arr[1][:4], 16)
-            print("[SERVER] " + str(msgId) + " " + str(totalsent))
+            print("[SERVER] " + str(msgId) + " " + str(totalSent))
         time.sleep(50.0 / 1000.0)
 
 
@@ -82,23 +82,25 @@ def instrument_debugger_checks():
     injector = open("dumper.js", "r").read()
 
     if arch == "arm":
-        cputype = "1"
+        cpuType = "1"
     else:
-        cputype = "0"
+        cpuType = "0"
 
-    gametype = ""
+    gameType = ""
 
     if game == "bb":
-        gametype = "0"
+        gameType = "0"
     elif game == "coc":
-        gametype = "1"
+        gameType = "1"
+    elif game == "cr":
+        gameType = "2"
 
-    xptable = get_table()[gametype][cputype]
+    xptable = get_table()[gameType][cpuType]
     xp1 = int(xptable["1"], 16)
     xp2 = int(xptable["2"], 16)
     xp3 = int(xptable["3"], 16)
     thumb = xptable["thumb"]
-    if (thumb):
+    if thumb:
         xp1 = xp1 + 1
         xp2 = xp2 + 1
         xp3 = xp3 + 1
@@ -109,18 +111,14 @@ def runCmd(cmd):
     os.system(cmd)
 
 
-mode = ""
-game = ""
-arch = ""
-
 package_name = ""
 path = ""
 
 parser = argparse.ArgumentParser(description='Dump SC protocol data.')
 
-parser.add_argument('-m', '--mode', help="Mode for dumper to run.")
-parser.add_argument('-g', '--game', help="Game to run.")
-parser.add_argument('-a', '--arch', help="Device architecture.")
+parser.add_argument('-m', '--mode', help="Mode for dumper to run.", required=True)
+parser.add_argument('-g', '--game', help="Game to run.", required=True)
+parser.add_argument('-a', '--arch', help="Device architecture.", required=True)
 
 args = parser.parse_args()
 
@@ -128,18 +126,14 @@ mode = args.mode
 game = args.game
 arch = args.arch
 
-if not mode or not game or not arch:
-    print("Run with argument --help (-h) for more information.")
-    sys.exit(1)
-
 if mode != "proxy" and mode != "dump":
     print("Mode \"" + mode + "\" is not valid. Try \"proxy\" or \"dump\"")
     print("Proxy: Connects to the local node proxy server.")
     print("Dump: Starts a dump session.")
     sys.exit(1)
 
-if game != "coc" and game != "bb":
-    print("Game \"" + game + "\" is not valid. Try \"coc\" or \"bb\"")
+if game != "coc" and game != "bb" and game != "cr":
+    print("Game \"" + game + "\" is not valid. Try \"coc\" - \"bb\" - \"cr\"")
     print("COC: Clash of Clans")
     print("BB: Boom Beach")
     sys.exit(1)
@@ -154,6 +148,8 @@ if game == "bb":
     package_name = "com.supercell.boombeach"
 elif game == "coc":
     package_name = "com.supercell.clashofclans"
+elif game == "cr":
+    package_name = "com.supercell.clashroyale"
 
 print("Starting dumper for " + package_name)
 
@@ -171,9 +167,9 @@ elif mode == "dump":
     os.makedirs(path)
 
 print("Killing " + package_name)
-runCmd("adb shell am force-stop " + package_name)
+runCmd("adb -s LGH85029b804c6 shell am force-stop " + package_name)
 print("Starting " + package_name)
-runCmd("adb shell am start -n " + package_name + "/" + package_name + ".GameApp")
+runCmd("adb -s LGH85029b804c6 shell am start -n " + package_name + "/" + package_name + ".GameApp")
 
 process = frida.get_usb_device().attach(package_name)
 print("Frida attached.")
